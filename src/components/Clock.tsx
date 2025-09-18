@@ -4,15 +4,15 @@ type ClockProps = { name: string };
 type ClockState = { time: string };
 
 export class Clock extends Component<ClockProps, ClockState> {
-  state: ClockState = { time: '' };
+  // Inicializa o estado com a hora atual formatada
+  state: ClockState = {
+    time: new Date().toUTCString().slice(-12, -4),
+  };
 
   private timerId?: number;
 
   componentDidMount() {
-    this.setState({
-      time: new Date().toUTCString().slice(-12, -4),
-    });
-
+    // Apenas inicia o intervalo de atualização
     this.timerId = window.setInterval(() => {
       const currentTime = new Date().toUTCString().slice(-12, -4);
 
@@ -23,16 +23,16 @@ export class Clock extends Component<ClockProps, ClockState> {
     }, 1000);
   }
 
-  componentWillUnmount() {
-    if (this.timerId !== undefined) {
-      window.clearInterval(this.timerId);
-    }
-  }
-
   componentDidUpdate(prevProps: ClockProps) {
     if (prevProps.name !== this.props.name) {
       // eslint-disable-next-line no-console
       console.warn(`Renamed from ${prevProps.name} to ${this.props.name}`);
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.timerId !== undefined) {
+      window.clearInterval(this.timerId);
     }
   }
 
